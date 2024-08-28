@@ -60,9 +60,10 @@ function LandingPage() {
       </div>
       <div className="landing-content">
         {/* Optional additional content can go here */}
-        
+        <div className="Rooms-page">
+        <RoomsPage/>
+        </div>
       </div>
-      <RoomsPage/>
     </div>
   );
 }

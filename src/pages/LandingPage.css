@@ -37,7 +37,9 @@
   font-size: 1.5rem; /* Adjust as needed */
   margin-bottom: 30px;
 }
-
+.Rooms-page {
+  margin-top: 200px; /* Adjust the value as needed */
+}
 .booking-form {
     position: absolute; /* Position the form absolutely within the Banner */
     bottom: -30px; /* Position it at the bottom of the image */
