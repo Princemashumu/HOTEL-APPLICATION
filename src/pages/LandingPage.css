@@ -11,7 +11,7 @@ align-items: center;
 color: #fff;
 /* padding: 10px; */
 justify-content: space-between;
-height:300px;
+height:500px;
 align-items: flex-start;
 width:100%;
 
@@ -20,7 +20,7 @@ width:100%;
 
 .booking-form {
     position: absolute; /* Position the form absolutely within the Banner */
-    bottom: -70px; /* Position it at the bottom of the image */
+    bottom: 438px; /* Position it at the bottom of the image */
     left: 50%; /* Center the form horizontally */
     transform: translateX(-50%); /* Center the form horizontally */
     display: flex;
@@ -29,6 +29,8 @@ width:100%;
     padding: 10px 20px; /* Padding inside the form */
     border-radius: 10px; /* Rounded corners */
     /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); Optional: add a subtle shadow for depth */
+    border:5px solid orangered;
+    border-bottom:white;
 }
 
   .form-input {

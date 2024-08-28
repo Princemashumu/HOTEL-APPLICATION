@@ -9,13 +9,13 @@ function LandingPage() {
       <div 
         className='Banner' 
         style={{ 
-          backgroundImage: `url(${banner})`,
-          backgroundSize: 'cover',  // Ensure the image covers the entire div
-          backgroundPosition: 'center', // Center the image
-          backgroundRepeat: 'no-repeat', // Prevent the image from repeating
-          height: '1000px', // Adjust height as needed
-          width: '100%' // Full width of the container
-        }}
+            backgroundImage: `url(${banner})`,
+            backgroundSize: 'cover',  // Ensure the image covers the entire div
+            backgroundPosition: 'center', // Center the image
+            backgroundRepeat: 'no-repeat', // Prevent the image from repeating
+            height: '500px', // Adjust height as needed
+            width: '100%', // Full width of the container
+          }}
       >
         <Header />
         
