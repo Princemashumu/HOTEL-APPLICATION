@@ -19,6 +19,7 @@ const Header = () => {
           <li><a href="/rooms">Rooms</a></li>
           <li><a href="/amenities">Amenities</a></li>
           <li><a href="/gallery">Gallery</a></li>
+          <li><a href="/info">Info</a></li>
           <li><a href="/contact">Contact Us</a></li>
         </ul>
       </nav>

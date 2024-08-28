@@ -1,36 +1,68 @@
 import React from 'react';
+import { TextField, Button } from '@mui/material';
+import './LandingPage.css';
+import banner from '../Images/bannerImageS.jpg';
 import Header from './Header';
-import './LandingPage.css'; // Optional: Add your styles for LandingPage here
-import banner from '../Images/bannerImage.jpg'; // Import the banner image
+import RoomsPage from './RoomsPage';
 
 function LandingPage() {
   return (
     <div>
-      <div 
-        className='Banner' 
-        style={{ 
-            backgroundImage: `url(${banner})`,
-            backgroundSize: 'cover',  // Ensure the image covers the entire div
-            backgroundPosition: 'center', // Center the image
-            backgroundRepeat: 'no-repeat', // Prevent the image from repeating
-            height: '500px', // Adjust height as needed
-            width: '100%', // Full width of the container
-          }}
-      >
-        <Header />
-        
+      <div className='Banner'>
+        <Header/>
+        <img src={banner} alt="Banner" className="banner-image" />
+        <div className="banner-text">
+  <h1><span style={{ color: 'white' }}>Tzaneen</span><span style={{ color: 'red' }}>Hotels.</span></h1>
+  {/* <p>An ideal stay when your looking for luxury.</p> */}
+</div>
         <form className="booking-form">
-          <input type="date" placeholder="Check-in Date" className="form-input" />
-          <input type="date" placeholder="Check-out Date" className="form-input" />
-          <input type="number" placeholder="Number of People" className="form-input" />
-          <button type="submit" className="form-button">Book Now</button>
+          <TextField
+            label="Check-in"
+            type="date"
+            className="form-input"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Check-out"
+            type="date"
+            className="form-input"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Number of People"
+            type="number"
+            className="form-input"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              color: '#fff',
+              borderColor: '#fff',
+              borderRadius: '25px',
+              fontSize: '10px',
+              fontWeight: 'bold',
+              textTransform: 'none',
+              transition: 'background-color 0.3s, border-color 0.3s',
+              '&:hover': {
+                backgroundColor: 'black',
+                borderColor: '#08a1dd',
+              },
+            }}
+          >
+            View Rates
+          </Button>
         </form>
       </div>
-      
       <div className="landing-content">
-        <h1>Welcome to HotelApp</h1>
-        <p>Your ideal hotel booking platform.</p>
+        {/* Optional additional content can go here */}
+        
       </div>
+      <RoomsPage/>
     </div>
   );
 }

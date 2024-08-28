@@ -5,22 +5,42 @@
   }
   
 .Banner{
-display: flex;
-align-items: center;
-/* background-color: rgb(9, 170, 22);  */
-color: #fff;
-/* padding: 10px; */
-justify-content: space-between;
-height:500px;
-align-items: flex-start;
-width:100%;
+    display:flex;
+    flex-direction: column;
+    position:relative;
+    height: 70vh;
 
-    
+}
+
+.banner-image{
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+}
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.banner-text h1 {
+  font-size: 3rem; /* Adjust as needed */
+  margin-bottom: 20px;
+}
+
+.banner-text p {
+  font-size: 1.5rem; /* Adjust as needed */
+  margin-bottom: 30px;
 }
 
 .booking-form {
     position: absolute; /* Position the form absolutely within the Banner */
-    bottom: 438px; /* Position it at the bottom of the image */
+    bottom: -30px; /* Position it at the bottom of the image */
     left: 50%; /* Center the form horizontally */
     transform: translateX(-50%); /* Center the form horizontally */
     display: flex;
@@ -41,15 +61,24 @@ width:100%;
   }
   
   .form-button {
-    padding: 10px 20px;
     background-color: #000;
     color: #fff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 30px;
     font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, border-color 0.3s;
+    margin-right: 20px;
+    width: 150px;
+    height:40px;
   }
   
   .form-button:hover {
-    background-color: #08a1dd; /* Change color on hover */
+    background-color: #000000; /* Change color on hover */
   }
+
+.banner-text{
+
+  bottom: 30px;
+}
