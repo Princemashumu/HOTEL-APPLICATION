@@ -1,0 +1,78 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribute space between items */
+    position: fixed;
+    width: 100%;
+    padding: 20px 20px; /* Add padding: 10px top/bottom, 20px left/right */
+    color: #fff;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 70px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.search-container {
+    margin: 0 20px; /* Add space between logo and search input */
+}
+
+.search-input {
+    width: 500px; /* Adjust width as needed */
+    padding: 8px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+.nav {
+    margin: 0 20px; /* Add space between search input and menu */
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.nav li {
+    margin: 0 10px; /* Add space between menu items */
+}
+
+.nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+.book-now {
+    margin-left: 20px; /* Add space between menu and Book Now button */
+}
+
+.book-now-button {
+    background-color: #000000; /* Black color for the button */
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+}
+
+.book-now-button:hover {
+    background-color: #08a1dd; /* Lighter color on hover */
+    border-color: #ccc; /* Lighter border color on hover */
+}

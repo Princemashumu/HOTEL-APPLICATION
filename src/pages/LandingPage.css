@@ -1,0 +1,53 @@
+/* src/components/LandingPage.css */
+.landing-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+.Banner{
+display: flex;
+align-items: center;
+/* background-color: rgb(9, 170, 22);  */
+color: #fff;
+/* padding: 10px; */
+justify-content: space-between;
+height:300px;
+align-items: flex-start;
+width:100%;
+
+    
+}
+
+.booking-form {
+    position: absolute; /* Position the form absolutely within the Banner */
+    bottom: -70px; /* Position it at the bottom of the image */
+    left: 50%; /* Center the form horizontally */
+    transform: translateX(-50%); /* Center the form horizontally */
+    display: flex;
+    gap: 10px; /* Space between form fields */
+    background: linear-gradient(to bottom, blue, white); /* Linear gradient from blue to white */
+    padding: 10px 20px; /* Padding inside the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for depth */
+}
+
+  .form-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .form-button {
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .form-button:hover {
+    background-color: #08a1dd; /* Change color on hover */
+  }
