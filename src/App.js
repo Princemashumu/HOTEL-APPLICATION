@@ -1,14 +1,14 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LandingPage from './pages/LandingPage'; 
-import BookingPage from './pages/BookingPage';
-import RoomsPage from './pages/RoomsPage';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import GalleryPage from './pages/GalleryPage';
-import ProfilePage from './pages/ProfilePage';
-import RegisterPage from './pages/RegisterPage';
+import LandingPage from './pages/LandingPage/LandingPage'; 
+import BookingPage from './pages/BookingPage/BookingPage';
+import RoomsPage from './pages/LandingPage/RoomsPage';
+import HomePage from './pages/HomePage/HomePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import GalleryPage from './pages/GalleryPage/GalleryPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 function App() {
   return (

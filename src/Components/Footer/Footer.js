@@ -21,7 +21,7 @@ function Footer() {
         backgroundColor: 'black', 
         color: 'white', 
         padding: '20px', 
-        marginTop: '30px' 
+        marginTop: '0px' 
       }}
     >
       <Container>

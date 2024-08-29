@@ -1,12 +1,12 @@
 import React from 'react';
 import { TextField, Button } from '@mui/material';
 import './LandingPage.css';
-import banner from '../Images/bannerImageS.jpg';
-import Header from './Header';
+import banner from './bannerImageS.jpg';
+import Header from '../../Components/Header/Header';
 import RoomsPage from './RoomsPage';
-import FeaturedAmenities from './FeaturedAmenities';
-import HotelInfo from './HotelInfo';
-import Footer from './Footer';
+import FeaturedAmenities from '../../Components/Amenities/FeaturedAmenities';
+import HotelInfo from '../../Components/HotelInfo/HotelInfo';
+import Footer from '../../Components/Footer/Footer';
 
 
 function LandingPage() {
