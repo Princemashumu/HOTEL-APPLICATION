@@ -1,12 +1,29 @@
 // src/components/Header.js
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import './Header.css';
 import logoImg from '../Images/Logo.png'; // Adjust the path as needed
 
 const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) { // Adjust this value based on when you want the color to change
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup listener on component unmount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
   return (
-    <header className="header" >
+    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="logo">
         <img src={logoImg} alt="HotelApp Logo" className="logo-img" />
       </div>

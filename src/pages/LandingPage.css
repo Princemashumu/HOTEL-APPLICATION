@@ -1,6 +1,6 @@
 /* src/components/LandingPage.css */
 .landing-content {
-    padding: 20px;
+    /* padding: 20px; */
     text-align: center;
   }
   
@@ -38,7 +38,7 @@
   margin-bottom: 30px;
 }
 .Rooms-page {
-  margin-top: 180px; /* Adjust the value as needed */
+  margin-top: 110px; /* Adjust the value as needed */
 }
 .booking-form {
     position: absolute; /* Position the form absolutely within the Banner */
@@ -46,7 +46,7 @@
     left: 50%; /* Center the form horizontally */
     transform: translateX(-50%); /* Center the form horizontally */
     display: flex;
-    gap: 10px; /* Space between form fields */
+    gap: 5px; /* Space between form fields */
     background: linear-gradient(to bottom, blue, white); /* Linear gradient from blue to white */
     padding: 10px 20px; /* Padding inside the form */
     border-radius: 10px; /* Rounded corners */
@@ -60,6 +60,8 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    flex: 1 1 100%; /* Full width on small screens */
+    min-width: 200px;
   }
   
   .form-button {
@@ -76,6 +78,9 @@
     height:40px;
   }
   
+  .booking-form Button {
+    flex: 1 1 100%; /* Full width on small screens */
+  }
   .form-button:hover {
     background-color: #000000; /* Change color on hover */
   }
@@ -83,4 +88,8 @@
 .banner-text{
 
   bottom: 30px;
+}
+.Footer{
+
+  margin-top:30px;
 }
