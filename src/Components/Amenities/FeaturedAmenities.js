@@ -24,7 +24,7 @@ function FeaturedAmenities() {
   return (
     <Container sx={{ backgroundColor: 'beige', borderRadius: '15px', padding: '20px', marginTop: '30px' }}>
       <Typography variant="h4" component="h2" gutterBottom textAlign="center" sx={{ marginBottom: '10px', fontWeight: 'bold' }}>
-        Featured Amenities
+        Hotel Amenities On-Site
       </Typography>
       <Divider sx={{ marginBottom: '20px', borderColor: 'gray' }} />
       <Grid container spacing={4} justifyContent="center">

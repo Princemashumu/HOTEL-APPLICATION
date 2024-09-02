@@ -11,7 +11,8 @@ import Footer from '../../Components/Footer/Footer';
 
 function LandingPage() {
   return (
-    <div>
+    <div >
+
       <div className='Banner'>
         <Header/>
         <img src={banner} alt="Banner" className="banner-image" />
@@ -47,7 +48,7 @@ function LandingPage() {
   sx={{
     background: 'linear-gradient(45deg, #000, #333)',
     color: '#fff',
-    padding: '8px 16px',
+    // padding: '8px 16px',
     borderRadius: '30px',
     fontSize: '16px',
     fontWeight: 'bold',
