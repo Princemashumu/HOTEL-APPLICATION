@@ -51,10 +51,10 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
       <DialogContent>
         {/* Room Details Section */}
         <Box sx={{ border: '1px solid #ccc', borderRadius: '8px', padding: 2, mb: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', borderBottom: '1px solid #ddd', paddingBottom: 2, marginBottom: 2 }}>
           <Typography variant="h5" sx={{ mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
             Room Details
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', borderBottom: '1px solid #ddd', paddingBottom: 2, marginBottom: 2 }}>
             <img
               src={room.image}
               alt={room.name}
@@ -66,7 +66,7 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
               {room.name}
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
-              Rating: {room.rating} {getRatingStars(room.rating)}
+              {getRatingStars(room.rating)}
             </Typography>
             <Typography variant="body1" sx={{ mb: 1 }}>
               Status: <span style={{ color: getStatusColor(room.status) }}>{room.status}</span>
@@ -81,8 +81,8 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
         </Box>
 
         {/* Room Amenities Section */}
-        <Box sx={{ border: '1px solid #ccc', borderRadius: '8px', padding: 2, mb: 2 }}>
-          <Typography variant="h5" sx={{ mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
+        <Box sx={{ border: '1px solid #ccc', borderRadius: '8px', padding: 2, mb: 2,width:'50%' }}>
+          <Typography variant="h5" sx={{ mb: 2, textAlign: 'flex-start', fontWeight: 'bold' }}>
             Room Amenities
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2, alignItems: 'flex-start' }}>
@@ -98,8 +98,8 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
         </Box>
 
         {/* Room Info Section */}
-        <Box sx={{ border: '1px solid #ccc', borderRadius: '8px', padding: 2 }}>
-          <Typography variant="h5" sx={{ mb: 2, textAlign: 'center', fontWeight: 'bold' }}>
+        <Box sx={{ border: '1px solid #ccc', borderRadius: '8px', padding: 2,width:'50%'}}>
+          <Typography variant="h5" sx={{ mb: 2, textAlign: 'flex-start', fontWeight: 'bold' }}>
             Room Info
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
