@@ -1,94 +1,135 @@
-.register-page {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-}
-
-.Banner {
-
-  background-image: url('../RegisterPage/bannerImageS.jpg');
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 100%;
+.header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  color: white;
-  text-align: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  padding: 10px;
+  color: #fff;
+  /* background-color: rgba(0, 0, 0, 0.8); Optional: Add a background color for better readability */
+  z-index: 1000;
 }
 
-.banner-content {
-  margin-top: 50%;
-  position: relative;
-  z-index: 1;
-}
-
-.signup-container {
-  width: 400px;
- /* margin-top: 50%; */
-  margin: 50px auto;
-  padding: 40px;
-  background-color: #f0f8ff; /* Light blue background */
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.signup-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333; /* Darker color for the title */
-  font-family: 'Arial', sans-serif;
-  font-size: 24px;
-}
-
-.signup-form {
+.logo {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.logo-img {
+  height: 70px;
+  width: auto;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #555; /* Darker label color */
-  font-family: 'Arial', sans-serif;
+.search-container {
+  margin: 0 10px;
+  flex-grow: 1; /* Allow the search container to grow and take available space */
 }
 
-.form-group input {
-  width: 100%;
-  padding: 12px;
+.search-input {
+  width: 100%; /* Full width within the container */
+  max-width: 500px; /* Max width for larger screens */
+  padding: 8px;
+  height: 30px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 25px;
   font-size: 16px;
-  background-color: #fafafa; /* Light gray input background */
-  color: #333;
-  transition: border-color 0.3s ease;
 }
 
-.form-group input:focus {
-  border-color: #007bff; /* Blue border on focus */
-  outline: none;
+.nav {
+  margin: 0 10px;
 }
 
-.signup-button {
-  width: 100%;
-  padding: 15px;
-  background-color: #007bff; /* Blue button */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+}
+
+.nav li {
+  margin: 0 10px;
+}
+
+.nav a {
+  color: #fff;
+  text-decoration: none;
   font-size: 18px;
-  font-family: 'Arial', sans-serif;
-  transition: background-color 0.3s ease;
 }
 
-.signup-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.book-now {
+  margin-left: 20px;
+}
+
+.book-now-button {
+  background: linear-gradient(45deg, #000, #333); /* Dark gradient background */
+  color: #fff; /* White text color */
+  padding: 12px 24px; /* Padding inside the button */
+  text-decoration: none; /* Remove underline from link */
+  border-radius: 30px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold font */
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s; /* Smooth transitions */
+  margin-right: 20px; /* Space on the right */
+  border: 2px solid transparent; /* Transparent border */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: auto; /* Automatically adjust the width to fit content */
+  text-align: center; /* Center the text inside the button */
+}
+
+.book-now-button:hover {
+  background: linear-gradient(45deg, #08a1dd, #0c7db8); /* Change background on hover */
+  border-color: #08a1dd; /* Change border color on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Slightly larger shadow on hover */
+  transform: translateY(-10px); /* Slight upward movement on hover */
+}
+
+.header.scrolled {
+  /* background-color: black; */
+  color: white;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 768px) {
+  .search-input {
+      width: 100%; /* Full width on smaller screens */
+      max-width: 300px; /* Adjust the max width for medium screens */
+  }
+
+  .nav ul {
+      flex-direction: column;
+      gap: 5px;
+  }
+
+  .book-now-button {
+      font-size: 14px; /* Slightly smaller font size on medium screens */
+      padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-img {
+      height: 50px; /* Reduce logo size on small screens */
+  }
+
+  .search-input {
+      max-width: 100%; /* Full width on small screens */
+      padding: 6px; /* Reduce padding on small screens */
+  }
+
+  .nav ul {
+      display: none; /* Hide navigation links on very small screens */
+  }
+
+  .book-now-button {
+      font-size: 14px; /* Smaller font size */
+      padding: 8px 16px;
+      margin-right: 10px;
+  }
 }
