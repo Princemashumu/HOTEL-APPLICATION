@@ -1,0 +1,117 @@
+.landing-content {
+  /* padding: 20px; */
+  text-align: center;
+}
+
+.Banner {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 70vh; /* 70% of the viewport height */
+}
+
+.header {
+  position: absolute; /* Position the header absolutely within the banner */
+  top: 0; /* Align the header to the very top */
+  left: 50%; /* Center the header horizontally */
+  transform: translateX(-50%); /* Center the header horizontally */
+  width: 100%; /* Ensure the header spans the full width of the banner */
+  z-index: 1000; /* Keep the header above other elements */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px; /* Add horizontal padding to the header */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  color: #fff;
+  padding-left: 30px;
+}
+
+.banner-image {
+  height: 100%;
+  width: 100%;
+  object-fit: fill; /* Adjusted from fill to cover for better scaling */
+}
+
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.banner-text h1 {
+  font-size: 3rem; /* Adjust as needed */
+  margin-bottom: 20px;
+}
+
+.banner-text p {
+  font-size: 1.5rem; /* Adjust as needed */
+  margin-bottom: 30px;
+}
+
+.booking-form {
+  position: absolute; /* Position the form absolutely within the Banner */
+  bottom: -30px; /* Position it at the bottom of the image */
+  left: 50%; /* Center the form horizontally */
+  transform: translateX(-50%); /* Center the form horizontally */
+  display: flex;
+  gap: 5px; /* Space between form fields */
+  background: linear-gradient(to bottom, blue, white); /* Linear gradient from blue to white */
+  padding: 10px 20px; /* Padding inside the form */
+  border-radius: 10px; /* Rounded corners */
+  border: 5px solid orangered;
+  border-bottom: white;
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  flex: 1 1 100%; /* Full width on small screens */
+  min-width: 200px;
+}
+
+.booking-form Button {
+  display: flex;
+  flex-direction: row;
+  background-color: #000;
+  color: #fff;
+  /* padding: 10px 20px; */
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s, border-color 0.3s;
+  margin-right: 20px;
+  width: 450px;
+  height: 50px;
+  text-transform: none;
+}
+
+.booking-form Button:hover {
+  background-color: #000000; /* Change color on hover */
+}
+
+.Rooms-page {
+  margin-top: 110px; /* Adjust the value as needed */
+}
+
+.room-description {
+  font-size: 14px; /* Decrease font size */
+  text-align: left; /* Align text to the start */
+}
+
+/* If you're using a flexbox or grid layout, ensure descriptions are at the start */
+.room-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Ensure descriptions are at the start */
+}
+
+.Footer {
+  margin-top: 30px;
+}

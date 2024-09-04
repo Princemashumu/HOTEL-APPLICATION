@@ -22,7 +22,8 @@ function FeaturedAmenities() {
   ];
 
   return (
-    <Container sx={{ backgroundColor: 'beige', borderRadius: '15px', padding: '20px', marginTop: '30px' }}>
+    <Container sx={{ borderRadius: '15px', padding: '20px', marginTop: '30px',backgroundColor: "rgba(255, 255, 255, 0.9)",
+    boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.2)"}}>
       <Typography variant="h4" component="h2" gutterBottom textAlign="center" sx={{ marginBottom: '10px', fontWeight: 'bold' }}>
         Hotel Amenities On-Site
       </Typography>

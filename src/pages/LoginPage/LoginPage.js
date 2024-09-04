@@ -3,10 +3,11 @@ import { Box, TextField, Button, Typography, Grid, Link, IconButton, InputAdornm
 import { GridLoader } from 'react-spinners';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import backgroundImage from './bannerImageS.jpg'; // Adjust the path to your background image
-import RegisterHeader from '../RegisterPage/RegisterHeader'; // Adjust the path if necessary
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth function
-import { auth } from 'C:/Users/User/Documents/Code Tribe/ACADEMY/hotelapp/src/firebase/firebaseConfig.js'; // Adjust the path to your Firebase config
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from 'C:/Users/User/Documents/Code Tribe/ACADEMY/hotelapp/src/firebase/firebaseConfig.js';
+import backgroundImage from './bannerImageS.jpg';
+import RegisterHeader from '../RegisterPage/RegisterHeader';
 
 function LoginForm() {
   const [email, setEmail] = React.useState('');
@@ -16,6 +17,8 @@ function LoginForm() {
   const [formError, setFormError] = React.useState('');
   const [successMessage, setSuccessMessage] = React.useState('');
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -39,8 +42,8 @@ function LoginForm() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setSuccessMessage('Logged in successfully!');
-      setOpenSnackbar(true); // Open Snackbar on success
-      // Redirect or perform additional actions on successful login
+      setOpenSnackbar(true);
+      navigate('/homepage'); // Redirect to the home page after success
     } catch (error) {
       setFormError(error.message);
     } finally {
@@ -50,83 +53,22 @@ function LoginForm() {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
-    // Optionally redirect or clear form after snackbar closes
   };
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        height: '100vh',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Background Image */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -1,
-        }}
-      />
+    <Box sx={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
+      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: -1 }} />
 
-      {/* Fullscreen Loader */}
       {loading && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
+        <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <GridLoader color="#fff" loading={loading} size={30} />
         </Box>
       )}
 
-      {/* Content */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: '100%',
-          color: '#fff',
-        }}
-      >
-        {/* Call the RegisterHeader component */}
+      <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: '#fff' }}>
         <RegisterHeader />
 
-        {/* Login Form */}
-        <Box
-          sx={{
-            mt: 4,
-            width: '90%',
-            maxWidth: '400px',
-            textAlign: 'center',
-            backgroundColor: 'rgba(10, 0, 0, 0.7)',
-            borderRadius: '12px',
-            padding: 4,
-            boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)',
-          }}
-        >
+        <Box sx={{ mt: 4, width: '90%', maxWidth: '400px', textAlign: 'center', backgroundColor: 'rgba(10, 0, 0, 0.7)', borderRadius: '12px', padding: 4, boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.4)' }}>
           <Typography variant="h4" sx={{ mb: 4 }}>
             Log In
           </Typography>
@@ -221,7 +163,6 @@ function LoginForm() {
           </Typography>
         </Box>
 
-        {/* Snackbar for Success Message */}
         <Snackbar
           open={openSnackbar}
           autoHideDuration={6000}
