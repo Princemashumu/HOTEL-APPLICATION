@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -13,31 +12,35 @@ import {
   Button,
   Snackbar,
   Alert,
+  TextField,
+  IconButton,
 } from '@mui/material';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
 import CloseIcon from '@mui/icons-material/Close'; // Import Close icon
-import {
-  ProfileDetailsMenu,
-  BookingsMenu,
-  FavouritesMenu,
-  SavedRoomsMenu,
-  SettingsMenu,
-} from './ProfileMenuItems';
+import EditIcon from '@mui/icons-material/Edit'; // Import Edit icon
+import { ProfileDetailsMenu, BookingsMenu, FavouritesMenu, SavedRoomsMenu, SettingsMenu } from './ProfileMenuItems';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 function ProfileDialog({ open, onClose }) {
   const [user, setUser] = useState(null);
   const [selectedMenu, setSelectedMenu] = useState('profileDetails');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
 
   const auth = getAuth();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     if (open) {
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
           setUser(currentUser);
+          setEditName(currentUser.displayName || '');
+          setEditEmail(currentUser.email || '');
         }
       });
 
@@ -50,19 +53,54 @@ function ProfileDialog({ open, onClose }) {
   };
 
   const handleSave = () => {
-    // Simulate a save operation
+    if (user) {
+      updateProfile(user, {
+        displayName: editName,
+        email: editEmail,
+      }).then(() => {
+        setSnackbarOpen(true); // Show snackbar when saved
+      }).catch((error) => {
+        console.error("Error updating profile:", error);
+      });
+    }
+  };
+
+  const handleClose = () => {
+    // Call handleSave to save changes
+    handleSave();
+    
+    // Refresh the browser after a delay
     setTimeout(() => {
-      setSnackbarOpen(true); // Show snackbar when saved
-      
-      // Refresh the browser after a delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    }, 500); // Simulate save operation time
+      window.location.reload();
+    }, 1000); // Adjust delay if necessary
+
+    // Close the dialog
+    // onClose();
   };
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    // Reset to initial values
+    setEditName(user?.displayName || '');
+    setEditEmail(user?.email || '');
+  };
+
+  const handleSignOut = () => {
+    // Sign out user
+    auth.signOut().then(() => {
+      // Navigate to landing page
+      navigate('/');
+    }).catch((error) => {
+      console.error("Error signing out:", error);
+    });
   };
 
   const renderContent = () => {
@@ -71,11 +109,66 @@ function ProfileDialog({ open, onClose }) {
         return (
           <Box>
             <Typography variant="h6">Personal Information</Typography>
-            {user && (
-              <>
-                <Typography variant="body1">Name: {user.displayName || 'N/A'}</Typography>
-                <Typography variant="body1">Email: {user.email || 'N/A'}</Typography>
-              </>
+            {isEditing ? (
+              <Box>
+                <TextField
+                  label="Name"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+                <Box mt={2}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSave}
+                    sx={{
+                      mr: 2,
+                      backgroundColor: theme.palette.primary.main,
+                      color: theme.palette.primary.contrastText,
+                      '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                      },
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleCancelEdit}
+                    sx={{
+                      color: theme.palette.secondary.main,
+                      borderColor: theme.palette.secondary.main,
+                      '&:hover': {
+                        borderColor: theme.palette.secondary.dark,
+                        color: theme.palette.secondary.dark,
+                      },
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Box>
+            ) : (
+              <Box>
+                <Typography variant="body1">Name: {user?.displayName || 'N/A'}</Typography>
+                <Typography variant="body1">Email: {user?.email || 'N/A'}</Typography>
+                <IconButton
+                  onClick={handleEditClick}
+                  sx={{ mt: 2, color: theme.palette.primary.main }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Box>
             )}
           </Box>
         );
@@ -104,7 +197,13 @@ function ProfileDialog({ open, onClose }) {
         return (
           <Box>
             <Typography variant="h6">Settings</Typography>
-            {/* Add Settings content here */}
+            <Button
+              onClick={handleSignOut}
+              sx={{ color: 'red', textTransform: 'none' }}
+            >
+              Sign Out
+            </Button>
+            {/* Add additional Settings content here */}
           </Box>
         );
       default:
@@ -116,21 +215,19 @@ function ProfileDialog({ open, onClose }) {
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={handleClose}
         fullScreen={fullScreen}
         fullWidth
         maxWidth="lg"
       >
         <DialogTitle>
           User Profile
-          <Button
-            variant="outlined"
-            color="purple"
-            onClick={handleSave}
-            sx={{ position: 'absolute', right: 8, top: 8, minWidth: 0, padding: 1 }}
+          <IconButton
+            onClick={handleClose}
+            sx={{ position: 'absolute', right: 8, top: 8, minWidth: 0, padding: 1, color: theme.palette.text.primary }}
           >
             <CloseIcon />
-          </Button>
+          </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box display="flex">

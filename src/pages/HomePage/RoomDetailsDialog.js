@@ -16,15 +16,15 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import SignUpNotificationDialog from './SignUpNotificationDialog'; // Import the new component
+import ConfirmBookingDialog from './ConfirmBookingDialog'; // Import the ConfirmBookingDialog component
 import { GridLoader } from 'react-spinners'; // Import the loader
 
 const RoomDetailsDialog = ({ open, onClose, room }) => {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [guests, setGuests] = useState(1);
-  const [loading, setLoading] = useState(false); // State for loading
-  const [showSignUpDialog, setShowSignUpDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showConfirmBookingDialog, setShowConfirmBookingDialog] = useState(false);
 
   if (!room) return null;
 
@@ -39,15 +39,14 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
   };
 
   const handleReserveNow = () => {
-    setLoading(true); // Show the loader
+    setLoading(true);
     setTimeout(() => {
-      setLoading(false); // Hide the loader
-      setShowSignUpDialog(true); // Show the sign-up dialog
-    }, 1000); // Simulate loading delay (e.g., 1 second)
+      setLoading(false);
+      setShowConfirmBookingDialog(true); // Show the confirm booking dialog
+    }, 1000);
   };
 
   const handleSaveRoom = () => {
-    // Implement save room logic here
     console.log('Room saved');
   };
 
@@ -220,30 +219,38 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Render the SignUpNotificationDialog when showSignUpDialog is true */}
-      <SignUpNotificationDialog
-        open={showSignUpDialog}
-        onClose={() => setShowSignUpDialog(false)}
+      {/* Confirm Booking Dialog */}
+      <ConfirmBookingDialog
+        open={showConfirmBookingDialog}
+        onClose={() => setShowConfirmBookingDialog(false)}
+        room={room}
       />
     </>
   );
 };
 
-// Utility functions to handle dynamic data
 const getRatingStars = (rating) => {
+  const fullStars = Math.floor(rating);
+  const halfStar = rating % 1 > 0;
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {Array.from({ length: 5 }, (_, index) =>
-        index < rating ? <StarIcon key={index} sx={{ color: 'gold' }} /> : <StarBorderIcon key={index} sx={{ color: 'gold' }} />
-      )}
-    </Box>
+    <>
+      {[...Array(fullStars)].map((_, i) => (
+        <StarIcon key={i} sx={{ color: '#ffd700' }} />
+      ))}
+      {halfStar && <StarBorderIcon sx={{ color: '#ffd700' }} />}
+    </>
   );
 };
 
 const getStatusColor = (status) => {
-  if (status === 'Available') return 'green';
-  if (status === 'Booked') return 'red';
-  return 'gray';
+  switch (status) {
+    case 'Available':
+      return 'green';
+    case 'Booked':
+      return 'red';
+    default:
+      return 'grey';
+  }
 };
 
 const capitalizeFirstLetter = (string) => {

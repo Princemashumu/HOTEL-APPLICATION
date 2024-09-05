@@ -7,7 +7,8 @@ import backgroundImage from './bannerImageS.jpg';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import Firebase auth function
-import { auth } from 'C:/Users/User/Documents/Code Tribe/ACADEMY/hotelapp/src/firebase/firebaseConfig.js'; // Import auth instance
+import { auth, db } from '../../firebase/firebaseConfig'; // Import auth and firestore instances
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 
 function RegisterPage() {
   const [termsAccepted, setTermsAccepted] = React.useState(false);
@@ -45,7 +46,18 @@ function RegisterPage() {
     setLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save additional user data to Firestore
+      await setDoc(doc(db, 'User', user.uid), {
+        firstName,
+        lastName,
+        email,
+        // You can add more fields here as needed
+      });
+
       setSnackbarMessage('Account created successfully!');
       setOpenSnackbar(true);
       setTimeout(() => {
@@ -279,12 +291,16 @@ function RegisterPage() {
           </Box>
         )}
 
-        {/* Snackbar for Success Message */}
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={6000}
           onClose={handleCloseSnackbar}
           message={snackbarMessage}
+          action={
+            <Button color="inherit" onClick={handleCloseSnackbar}>
+              Close
+            </Button>
+          }
         />
       </Box>
     </Box>
