@@ -1,4 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { getDocs, collection, updateDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig"; // Ensure the correct path to your Firebase config
 import {
   Container,
   Card,
@@ -9,6 +11,7 @@ import {
   Divider,
   IconButton,
   Tooltip,
+  TextField,
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -16,119 +19,48 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import RoomDetailsDialog from "./RoomDetailsDialog";
+import RoomDetailsDialog from "./RoomDetailsDialog"; // Make sure this path is correct
 
 function RoomsPage() {
-  const rooms = [
-    {
-      id: 1,
-      name: "Suite",
-      image: "https://via.placeholder.com/300",
-      rating: 4,
-      status: "Available",
-      reviewsCount: 12,
-      price: 1500,
-      amenities: ["wifi", "ac", "tv", "pool", "restaurant"],
-    },
-    {
-      id: 2,
-      name: "Deluxe Room",
-      image: "https://via.placeholder.com/300",
-      rating: 5,
-      status: "Great",
-      reviewsCount: 20,
-      price: 2000,
-      amenities: ["wifi", "ac", "tv", "gym", "restaurant"],
-    },
-    {
-      id: 3,
-      name: "Standard Room",
-      image: "https://via.placeholder.com/300",
-      rating: 3,
-      status: "Good",
-      reviewsCount: 8,
-      price: 1000,
-      amenities: ["wifi", "tv", "restaurant"],
-    },
-    {
-      id: 4,
-      name: "Presidential Suite",
-      image: "https://via.placeholder.com/300",
-      rating: 5,
-      status: "Available",
-      reviewsCount: 15,
-      price: 5000,
-      amenities: ["wifi", "ac", "tv", "pool", "spa", "restaurant"],
-    },
-    {
-      id: 5,
-      name: "Single Room",
-      image: "https://via.placeholder.com/300",
-      rating: 2,
-      status: "Not Available",
-      reviewsCount: 5,
-      price: 500,
-      amenities: ["wifi", "tv"],
-    },
-    {
-      id: 6,
-      name: "Family Suite",
-      image: "https://via.placeholder.com/300",
-      rating: 4,
-      status: "Great",
-      reviewsCount: 10,
-      price: 3000,
-      amenities: ["wifi", "ac", "tv", "pool", "kids play area", "restaurant"],
-    },
-    {
-      id: 7,
-      name: "Penthouse Suite",
-      image: "https://via.placeholder.com/300",
-      rating: 5,
-      status: "Available",
-      reviewsCount: 18,
-      price: 4000,
-      amenities: ["wifi", "ac", "tv", "private pool", "gym", "spa", "restaurant"],
-    },
-    {
-      id: 8,
-      name: "Economy Room",
-      image: "https://via.placeholder.com/300",
-      rating: 3,
-      status: "Renovating",
-      reviewsCount: 7,
-      price: 750,
-      amenities: ["wifi", "tv"],
-    },
-    {
-      id: 9,
-      name: "Executive Room",
-      image: "https://via.placeholder.com/300",
-      rating: 4,
-      status: "Good",
-      reviewsCount: 14,
-      price: 2500,
-      amenities: ["wifi", "ac", "tv", "restaurant"],
-    },
-    {
-      id: 10,
-      name: "Luxury Suite",
-      image: "https://via.placeholder.com/300",
-      rating: 5,
-      status: "Available",
-      reviewsCount: 25,
-      price: 3500,
-      amenities: ["wifi", "ac", "tv", "pool", "gym", "spa", "restaurant"],
-    },
-  ];
-  
-
+  const [rooms, setRooms] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [favorites, setFavorites] = useState(new Set());
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [ratings, setRatings] = useState({}); // State to store ratings
   const visibleCount = 3;
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "accommodation"));
+        const roomsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.roomName || 'Unknown Room',
+            image: data.images , // Replace with a default image URL if needed
+            price: Number(data.price) || 0, // Ensure price is a number
+            availability: data.availability || 'Unknown', // Provide a default value if necessary
+            amenities: Array.isArray(data.amenities) ? data.amenities : [], // Ensure amenities is an array
+            rating: data.rating || 0, // Ensure there's a default rating
+          };
+        });
+        console.log("Fetched Rooms Data:", roomsData); // Debugging line
+        setRooms(roomsData);
+        const initialRatings = roomsData.reduce((acc, room) => {
+          acc[room.id] = room.rating; // Initialize ratings state
+          return acc;
+        }, {});
+        setRatings(initialRatings);
+      } catch (error) {
+        console.error("Error fetching rooms:", error);
+      }
+    };
+
+    fetchRooms();
+  }, []);
 
   const scrollRight = () => {
     if (startIndex + visibleCount < rooms.length) {
@@ -156,18 +88,6 @@ function RoomsPage() {
     });
   };
 
-  const getRatingStars = (rating) => {
-    return Array(5)
-      .fill(0)
-      .map((_, index) =>
-        index < rating ? (
-          <StarIcon key={index} sx={{ color: "gold" }} />
-        ) : (
-          <StarBorderIcon key={index} sx={{ color: "gold" }} />
-        )
-      );
-  };
-
   const getStatusColor = (status) => {
     switch (status) {
       case "Available":
@@ -182,6 +102,25 @@ function RoomsPage() {
         return "gray";
       default:
         return "black";
+    }
+  };
+
+  const handleRatingChange = (id, event) => {
+    const newRating = Math.max(0, Math.min(5, Number(event.target.value)));
+    setRatings((prevRatings) => ({
+      ...prevRatings,
+      [id]: newRating,
+    }));
+  };
+
+  const handleRatingSubmit = async (id) => {
+    try {
+      await updateDoc(doc(db, "accommodation", id), {
+        rating: ratings[id],
+      });
+      alert("Rating updated successfully!");
+    } catch (error) {
+      console.error("Error updating rating:", error);
     }
   };
 
@@ -274,7 +213,6 @@ function RoomsPage() {
           padding: "0 10px",
           scrollBehavior: "smooth",
           scrollbarWidth: "none",
-          // scrollbarColor: "#888 #e0e0e0",
           "&::-webkit-scrollbar": {
             height: "8px",
           },
@@ -345,18 +283,9 @@ function RoomsPage() {
                     }}
                     sx={{
                       position: "absolute",
-                      top: 8,
-                      right: 8,
-                      zIndex: 1,
+                      top: "10px",
+                      right: "10px",
                       color: favorites.has(room.id) ? "red" : "white",
-                      backgroundColor: favorites.has(room.id)
-                        ? "rgba(255,255,255,0.8)"
-                        : "rgba(0,0,0,0.6)",
-                      "&:hover": {
-                        backgroundColor: favorites.has(room.id)
-                          ? "rgba(255, 0, 0, 0.8)"
-                          : "rgba(0, 0, 0, 0.8)",
-                      },
                     }}
                   >
                     {favorites.has(room.id) ? (
@@ -367,56 +296,45 @@ function RoomsPage() {
                   </IconButton>
                 </Tooltip>
               </Box>
-              <CardContent
-                sx={{
-                  padding: "16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                }}
-              >
-                <Typography variant="h6" component="div" sx={{ fontWeight: "bold", color: "#444" }}>
-                  {room.name}
+              <CardContent>
+                <Typography variant="h6">{room.name}</Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Price: ZAR{room.price}
                 </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginY: 1,
-                    width: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    {getRatingStars(room.rating)}
-                  </Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: getStatusColor(room.status),
-                      fontWeight: "bold",
-                      padding: "2px 8px",
-                      borderRadius: "12px",
-                      border: `1px solid ${getStatusColor(room.status)}`,
-                      textTransform: "uppercase",
-                      letterSpacing: "1px",
-                    }}
-                  >
-                    {room.status}
-                  </Typography>
-                </Box>
-                <Typography variant="subtitle1" color="textSecondary">
-                  {room.reviewsCount} reviews
-                </Typography>
-                <Divider sx={{ marginY: 1 }} />
                 <Typography
-                  variant="h6"
-                  color="primary"
-                  sx={{ fontWeight: "bold" }}
+                  variant="body2"
+                  color={getStatusColor(room.availability)}
                 >
-                  R{room.price} per night
+                  {room.availability}
                 </Typography>
+                <Typography variant="body2">
+                  Amenities: {room.amenities.join(", ")}
+                </Typography>
+
+                {/* Rating Input */}
+                <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                  <TextField
+                    type="number"
+                    inputProps={{ min: 0, max: 5, step: 0.1 }}
+                    value={ratings[room.id] || 0}
+                    onChange={(event) => handleRatingChange(room.id, event)}
+                    onBlur={() => handleRatingSubmit(room.id)}
+                    size="small"
+                    variant="outlined"
+                    sx={{ width: "60px", mr: 1 }}
+                  />
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      color={
+                        ratings[room.id] >= star
+                          ? "primary"
+                          : "action"
+                      }
+                      sx={{ fontSize: "20px" }}
+                    />
+                  ))}
+                </Box>
               </CardContent>
             </Card>
           </Box>
@@ -425,9 +343,9 @@ function RoomsPage() {
 
       {selectedRoom && (
         <RoomDetailsDialog
-          room={selectedRoom}
           open={openDialog}
           onClose={handleCloseDialog}
+          room={selectedRoom}
         />
       )}
     </Container>

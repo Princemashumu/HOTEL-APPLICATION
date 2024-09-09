@@ -26,8 +26,10 @@ function ProfileDialog({ open, onClose }) {
   const [selectedMenu, setSelectedMenu] = useState('profileDetails');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState('');
-  const [editEmail, setEditEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const auth = getAuth();
   const theme = useTheme();
@@ -39,8 +41,10 @@ function ProfileDialog({ open, onClose }) {
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) {
           setUser(currentUser);
-          setEditName(currentUser.displayName || '');
-          setEditEmail(currentUser.email || '');
+          const [first, last] = (currentUser.displayName || '').split(' ');
+          setFirstName(first || '');
+          setLastName(last || '');
+          setEmail(currentUser.email || '');
         }
       });
 
@@ -55,20 +59,29 @@ function ProfileDialog({ open, onClose }) {
   const handleSave = () => {
     if (user) {
       updateProfile(user, {
-        displayName: editName,
-        email: editEmail,
+        displayName: `${firstName} ${lastName}`,
+        email: email,
       }).then(() => {
         setSnackbarOpen(true); // Show snackbar when saved
       }).catch((error) => {
         console.error("Error updating profile:", error);
       });
+
+      // Optionally, update password if provided
+      if (password) {
+        user.updatePassword(password).then(() => {
+          // Password updated successfully
+        }).catch((error) => {
+          console.error("Error updating password:", error);
+        });
+      }
     }
   };
 
   const handleClose = () => {
     // Call handleSave to save changes
     handleSave();
-    
+
     // Refresh the browser after a delay
     setTimeout(() => {
       window.location.reload();
@@ -89,8 +102,11 @@ function ProfileDialog({ open, onClose }) {
   const handleCancelEdit = () => {
     setIsEditing(false);
     // Reset to initial values
-    setEditName(user?.displayName || '');
-    setEditEmail(user?.email || '');
+    const [first, last] = (user?.displayName || '').split(' ');
+    setFirstName(first || '');
+    setLastName(last || '');
+    setEmail(user?.email || '');
+    setPassword('');
   };
 
   const handleSignOut = () => {
@@ -112,16 +128,31 @@ function ProfileDialog({ open, onClose }) {
             {isEditing ? (
               <Box>
                 <TextField
-                  label="Name"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   fullWidth
                   margin="normal"
                 />
                 <TextField
                   label="Email"
-                  value={editEmail}
-                  onChange={(e) => setEditEmail(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   fullWidth
                   margin="normal"
                 />

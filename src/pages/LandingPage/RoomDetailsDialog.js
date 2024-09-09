@@ -16,8 +16,10 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import SignUpNotificationDialog from './SignUpNotificationDialog'; // Import the new component
 import { GridLoader } from 'react-spinners'; // Import the loader
+import SignUpNotificationDialog from './SignUpNotificationDialog'; // Import the new component
+import { db } from '../../firebase/firebaseConfig'; // Adjust the path according to your setup
+import { getAuth } from 'firebase/auth'; // Import Firebase Authentication
 
 const RoomDetailsDialog = ({ open, onClose, room }) => {
   const [checkInDate, setCheckInDate] = useState('');
@@ -46,9 +48,32 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
     }, 1000); // Simulate loading delay (e.g., 1 second)
   };
 
-  const handleSaveRoom = () => {
-    // Implement save room logic here
-    console.log('Room saved');
+  const handleSaveRoom = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      
+      if (user) {
+        // Add the room to the favorites collection
+        await db.collection('favorites').doc(user.uid).collection('rooms').doc(room.id).set({
+          name: room.name,
+          image: room.image,
+          price: room.price,
+          rating: room.rating,
+          status: room.status,
+          amenities: room.amenities,
+          checkIn: room.checkIn,
+          checkOut: room.checkOut,
+          smoking: room.smoking,
+          reviewsCount: room.reviewsCount,
+        });
+        console.log('Room saved');
+      } else {
+        console.error('No user logged in');
+      }
+    } catch (error) {
+      console.error('Error saving room:', error);
+    }
   };
 
   return (
@@ -177,73 +202,47 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">👤</InputAdornment>,
+                    inputProps: { min: 1 },
                   }}
                   fullWidth
                   sx={{ mb: 2 }}
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  {loading ? (
-                    <GridLoader
-                      color="#007bff"
-                      loading={loading}
-                      size={15}
-                    />
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      sx={{ borderRadius: '8px', padding: '10px 16px' }}
-                      onClick={handleReserveNow}
-                    >
-                      Reserve Now
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<FavoriteIcon />}
-                    sx={{ borderRadius: '8px', padding: '10px 16px' }}
-                    onClick={handleSaveRoom}
-                  >
-                    Save Room
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button variant="contained" color="primary" onClick={handleSaveRoom}>
+                    {loading ? <GridLoader size={10} color="#ffffff" /> : 'Save Room'} {/* Show loader */}
+                  </Button>
+                  <Button variant="contained" color="secondary" onClick={handleReserveNow}>
+                    Reserve Now
                   </Button>
                 </Box>
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
 
-      {/* Render the SignUpNotificationDialog when showSignUpDialog is true */}
-      <SignUpNotificationDialog
-        open={showSignUpDialog}
-        onClose={() => setShowSignUpDialog(false)}
-      />
+      {/* Sign-Up Dialog */}
+      <SignUpNotificationDialog open={showSignUpDialog} onClose={() => setShowSignUpDialog(false)} />
     </>
   );
 };
 
-// Utility functions to handle dynamic data
 const getRatingStars = (rating) => {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {Array.from({ length: 5 }, (_, index) =>
-        index < rating ? <StarIcon key={index} sx={{ color: 'gold' }} /> : <StarBorderIcon key={index} sx={{ color: 'gold' }} />
-      )}
-    </Box>
-  );
+  let stars = '';
+  for (let i = 0; i < Math.floor(rating); i++) stars += '★';
+  for (let i = Math.floor(rating); i < 5; i++) stars += '☆';
+  return stars;
 };
 
 const getStatusColor = (status) => {
-  if (status === 'Available') return 'green';
-  if (status === 'Booked') return 'red';
-  return 'gray';
+  switch (status) {
+    case 'Available':
+      return 'green';
+    case 'Booked':
+      return 'red';
+    default:
+      return 'grey';
+  }
 };
 
 const capitalizeFirstLetter = (string) => {
