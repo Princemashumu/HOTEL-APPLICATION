@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+## Hotel Booking Application
+This project is a hotel booking web application built with React, Firebase, and Material-UI. The application allows users to view room details, make reservations, and store their favorite rooms. User authentication and data storage are managed through Firebase, ensuring that each user's reservations and favorite rooms are stored securely.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Features
 
-## Available Scripts
+- User Authentication: Sign up and log in functionality with Firebase Authentication.
+- Room Reservation: Users can select rooms, view details, and make reservations.
+- Favorites: Users can save rooms to their favorites, accessible on their profile.
+- Responsive Design: The app is styled using Material-UI for a modern and responsive user interface.
+- Reservation Details Popup: Users can view a summary of their reservation before booking.
+- Technologies Used
+- Frontend: React, Material-UI
+- Backend: Firebase (Firestore, Authentication)
+- State Management: React Hooks
+- Icons: Material-UI Icons
+- Setup Instructions
 
-In the project directory, you can run:
+### Prerequisites
+Before running the application, make sure you have the following installed on your machine:
 
-### `npm start`
+```Node.js and npm
+Firebase project with Firestore and Authentication enabled
+Installation
+Clone this repository:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+bash
+Copy code
+git clone https://github.com/your-username/hotel-booking-app.git
+cd hotel-booking-app
+Install dependencies:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+bash
+Copy code
+npm install
+Create a Firebase project:
+```
+### Go to Firebase Console.
 
-### `npm test`
+- Create a new project.
+- Enable Firestore and Authentication.
+- Set up Firebase in your app:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```Create a file named firebaseConfig.js in the src/firebase directory:
 
-### `npm run build`
+Copy code
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const app = firebase.initializeApp(firebaseConfig);
+const db = app.firestore();
+const auth = app.auth();
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export { db, auth };
+Replace the placeholders (YOUR_API_KEY, etc.) with your Firebase project configuration.
+Run the application:
 
-### `npm run eject`
+bash
+Copy code
+npm start
+```
+## Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- 1. Authentication
+- New users can sign up, and existing users can log in using their email and password.
+- Firebase Authentication handles user management.
+- 2. Room Reservation
+- Once logged in, users can browse through the available rooms.
+- Users can reserve a room by clicking on "Reserve Now," which opens a dialog showing the reservation details.
+- To complete the reservation, click on "Book Now."
+- 3. Favorites
+- Logged-in users can save rooms to their favorites by clicking the "Save Room" button.
+- Rooms saved to favorites are stored under the user's document in Firestore.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
+``` bash
+Copy code
+src/
+│
+├── components/           # Reusable components (e.g., buttons, dialogs)
+├── pages/                # Main pages (HomePage, RoomDetails, etc.)
+├── firebase/             # Firebase configuration and initialization
+├── App.js                # Main app component
+├── index.js              # Entry point
+└── ...                   # Other files and assets
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+### Error Handling
+1. Firebase Firestore Error
+If you encounter this error:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### javascript
+Copy code
+Error saving room: TypeError: db.collection is not a function
+Make sure you have correctly initialized Firebase and imported Firestore in your firebaseConfig.js.
 
-## Learn More
+### Contributing
+If you would like to contribute, please fork the repository and submit a pull request with your changes. For major changes, open an issue first to discuss what you would like to modify.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Contact
+For any questions or support, please open an issue on GitHub or contact the project maintainer at [princemashumu@yahoo.com].
