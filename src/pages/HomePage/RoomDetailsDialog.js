@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography,
-  IconButton, Box, TextField, InputAdornment, Grid
+  IconButton, Box, TextField, Grid
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
 import WifiIcon from '@mui/icons-material/Wifi';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import TvIcon from '@mui/icons-material/Tv';
@@ -13,18 +13,16 @@ import PoolIcon from '@mui/icons-material/Pool';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import SmokingRoomsIcon from '@mui/icons-material/SmokingRooms';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ConfirmBookingDialog from './ConfirmBookingDialog'; // Import the ConfirmBookingDialog component
-import { GridLoader } from 'react-spinners'; // Import the loader
+import { GridLoader } from 'react-spinners';
+import { db,auth } from '../../firebase/firebaseConfig';
+import ReservationDetailsDialog from './ReservationDetailsDialog';
 
 const RoomDetailsDialog = ({ open, onClose, room }) => {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [guests, setGuests] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [showConfirmBookingDialog, setShowConfirmBookingDialog] = useState(false);
+  const [showReservationDialog, setShowReservationDialog] = useState(false);
 
   if (!room) return null;
 
@@ -42,12 +40,34 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setShowConfirmBookingDialog(true); // Show the confirm booking dialog
+      setShowReservationDialog(true);
     }, 1000);
   };
 
-  const handleSaveRoom = () => {
-    console.log('Room saved');
+  const handleSaveRoom = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error('No user is logged in');
+        return;
+      }
+      const userId = user.uid; // Get the logged-in user's ID
+      await db.collection('favorites').doc(userId).collection('rooms').doc(room.id).set({
+        name: room.name,
+        image: room.image,
+        price: room.price,
+        rating: room.rating,
+        status: room.status,
+        amenities: room.amenities,
+        checkIn: room.checkIn,
+        checkOut: room.checkOut,
+        smoking: room.smoking,
+        reviewsCount: room.reviewsCount,
+      });
+      console.log('Room saved');
+    } catch (error) {
+      console.error('Error saving room:', error);
+    }
   };
 
   return (
@@ -128,11 +148,11 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CalendarTodayIcon sx={{ color: 'grey', mr: 1 }} />
-                    <Typography variant="body1">Check-In: 3:00 pm  {room.checkIn}</Typography>
+                    <Typography variant="body1">Check-In: 03:00 PM</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <CalendarTodayIcon sx={{ color: 'grey', mr: 1 }} />
-                    <Typography variant="body1">Check-Out: 10:00 am {room.checkOut}</Typography>
+                    <Typography variant="body1">Check-Out: 10:00 AM</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <SmokingRoomsIcon sx={{ color: 'grey', mr: 1 }} />
@@ -176,85 +196,56 @@ const RoomDetailsDialog = ({ open, onClose, room }) => {
                   value={guests}
                   onChange={(e) => setGuests(e.target.value)}
                   InputProps={{
-                    startAdornment: <InputAdornment position="start">👤</InputAdornment>,
+                    inputProps: { min: 1 },
                   }}
                   fullWidth
                   sx={{ mb: 2 }}
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  {loading ? (
-                    <GridLoader
-                      color="#007bff"
-                      loading={loading}
-                      size={15}
-                    />
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      sx={{ borderRadius: '8px', padding: '10px 16px' }}
-                      onClick={handleReserveNow}
-                    >
-                      Reserve Now
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<FavoriteIcon />}
-                    sx={{ borderRadius: '8px', padding: '10px 16px' }}
-                    onClick={handleSaveRoom}
-                  >
-                    Save Room
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button variant="contained" color="primary" onClick={handleSaveRoom}>
+                    {loading ? <GridLoader size={10} color="#ffffff" /> : 'Save Room'}
+                  </Button>
+                  <Button variant="contained" color="secondary" onClick={handleReserveNow}>
+                    Reserve Now
                   </Button>
                 </Box>
               </Box>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
 
-      {/* Confirm Booking Dialog */}
-      <ConfirmBookingDialog
-        open={showConfirmBookingDialog}
-        onClose={() => setShowConfirmBookingDialog(false)}
+      {/* Reservation Details Dialog */}
+      <ReservationDetailsDialog
+        open={showReservationDialog}
+        onClose={() => setShowReservationDialog(false)}
         room={room}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        guests={guests}
+        price={room.price}
       />
     </>
   );
 };
 
-const getRatingStars = (rating) => {
-  const fullStars = Math.floor(rating);
-  const halfStar = rating % 1 > 0;
-  return (
-    <>
-      {[...Array(fullStars)].map((_, i) => (
-        <StarIcon key={i} sx={{ color: '#ffd700' }} />
-      ))}
-      {halfStar && <StarBorderIcon sx={{ color: '#ffd700' }} />}
-    </>
-  );
-};
+export default RoomDetailsDialog;
 
-const getStatusColor = (status) => {
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getRatingStars(rating) {
+  return '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+}
+
+function getStatusColor(status) {
   switch (status) {
     case 'Available':
       return 'green';
     case 'Booked':
       return 'red';
     default:
-      return 'grey';
+      return 'gray';
   }
-};
-
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export default RoomDetailsDialog;
+}
