@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import './Header.css';
 import logoImg from '../Images/Logo.png'; // Adjust the path as needed
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Slide } from '@mui/material';
+import GalleryDialog from './GalleryDialog';
+import InfoDialog from './InfoDialog';
+import ContactDialog from './ContactDialog';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [galleryDialogOpen, setGalleryDialogOpen] = useState(false);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const isLoggedIn = false;
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -34,6 +36,24 @@ const Header = () => {
     setIsDialogOpen(false);
   };
 
+  const handleGalleryDialogOpen = (e) => {
+    e.preventDefault();
+    setGalleryDialogOpen(true);
+  };
+  const handleGalleryDialogClose = () => setGalleryDialogOpen(false);
+
+  const handleInfoDialogOpen = (e) => {
+    e.preventDefault();
+    setInfoDialogOpen(true);
+  };
+  const handleInfoDialogClose = () => setInfoDialogOpen(false);
+
+  const handleContactDialogOpen = (e) => {
+    e.preventDefault();
+    setContactDialogOpen(true);
+  };
+  const handleContactDialogClose = () => setContactDialogOpen(false);
+
   // Slide transition for the dialog
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -44,18 +64,21 @@ const Header = () => {
       <div className="logo">
         <img src={logoImg} alt="HotelApp Logo" className="logo-img" />
       </div>
-      <div className="search-container">
-        <input type="text" placeholder="Search..." className="search-input" />
-      </div>
       <nav className="nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/roomspage">Rooms</a></li>
-          <li><a href="/amenities">Amenities</a></li>
-          <li><a href="/gallerypage">Gallery</a></li>
-          <li><a href="/info">Info</a></li>
-          <li><a href="/contact">Contact Us</a></li>
-        </ul>
+      <ul style={{
+    listStyle: 'none',
+    display: 'flex',
+    margin: 0,
+    padding: 0,
+    gap: '20px', // Adjust the gap as needed
+    justifyContent: 'center', // Center the ul horizontally
+    marginLeft: '100px', // Adjust the margin-left as needed
+    flexGrow: 1 // Allow ul to grow and take available space
+}}>
+    <li><a href="/gallerypage" onClick={handleGalleryDialogOpen}>Gallery</a></li>
+    <li><a href="/info" onClick={handleInfoDialogOpen}>Info</a></li>
+    <li><a href="/contact" onClick={handleContactDialogOpen}>Contact Us</a></li>
+</ul>
       </nav>
       <div className="book-now">
         <a href="/book-now" className="book-now-button" onClick={handleBookNowClick}>Book Now</a>
@@ -93,6 +116,11 @@ const Header = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog Components */}
+      <GalleryDialog open={galleryDialogOpen} handleClose={handleGalleryDialogClose} />
+      <InfoDialog open={infoDialogOpen} handleClose={handleInfoDialogClose} />
+      <ContactDialog open={contactDialogOpen} handleClose={handleContactDialogClose} />
     </header>
   );
 };

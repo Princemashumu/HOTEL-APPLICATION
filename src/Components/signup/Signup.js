@@ -10,6 +10,8 @@ function Signup() {
     confirmPassword: ''
   });
 
+  const [error, setError] = useState('');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -18,22 +20,55 @@ function Signup() {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePasswordStrength = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Add your form validation logic here
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    // Reset error message
+    setError('');
+
+    // Add form validation logic
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address.');
       return;
     }
 
-    // Submit the form data to your server or API here
+    if (!validatePasswordStrength(formData.password)) {
+      setError('Password must be at least 8 characters long and contain at least one number.');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match!');
+      return;
+    }
+
+    // Submit the form data to your server or API
     console.log('Form submitted:', formData);
+
+    // Reset the form after successful submission
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
   };
 
   return (
     <div className="signup-container">
       <h2>Create Your Account</h2>
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit} className="signup-form">
         <div className="form-group">
           <label htmlFor="firstName">First Name</label>

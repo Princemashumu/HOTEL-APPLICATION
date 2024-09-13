@@ -55,6 +55,7 @@ function RegisterPage() {
         firstName,
         lastName,
         email,
+        password,
         // You can add more fields here as needed
       });
 

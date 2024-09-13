@@ -9,7 +9,11 @@
     /* background-color: rgba(0, 0, 0, 0.8); Optional: Add a background color for better readability */
     z-index: 1000;
 }
-
+.nav ul li.active a {
+    font-weight: bold;
+    color: #ff0000; /* Change the color to indicate the active page */
+  }
+  
 .logo {
     display: flex;
     align-items: center;

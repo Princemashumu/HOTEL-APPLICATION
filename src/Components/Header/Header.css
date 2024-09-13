@@ -36,6 +36,8 @@
 }
 
 .nav {
+    display: flex;
+    align-items: center;
     margin: 0 10px;
 }
 
@@ -44,11 +46,22 @@
     display: flex;
     margin: 0;
     padding: 0;
+    gap: 20px; /* Increase gap for equal spacing */
+    justify-content: center; /* Center the navigation items */
+    flex-grow: 1; /* Allow nav to grow and take available space */
+    /* padding-left: 10px; */
+    margin-left:  80px;
+}
+.nav ul {
+    list-style: none;
+    display: flex;
+    margin-left: 70px;
+    padding: 0;
     gap: 10px;
 }
 
 .nav li {
-    margin: 0 10px;
+    margin: 0;
 }
 
 .nav a {
@@ -92,7 +105,7 @@
     background-color: black;
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+}
 
 /* Media Queries for Responsiveness */
 
@@ -105,6 +118,7 @@
     .nav ul {
         flex-direction: column;
         gap: 5px;
+        justify-content: flex-start; /* Align items to the start on small screens */
     }
 
     .book-now-button {

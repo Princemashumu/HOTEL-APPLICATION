@@ -1,59 +1,84 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './HomepageHeader.css';
-import logoImg from './Logo.png'; // Adjust the path as needed
-import { FaUserCircle } from 'react-icons/fa'; // Import profile icon from react-icons
-import ProfileDialog from './ProfileDialog'; // Import the ProfileDialog component
+import logoImg from './Logo.png';
+import { FaUserCircle } from 'react-icons/fa';
+import ProfileDialog from './ProfileDialog';
+import GalleryDialog from './GalleryDialog';
+import InfoDialog from './InfoDialog';
+import ContactDialog from './ContactDialog';
 
 const HomepageHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false); // State to manage dialog visibility
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [galleryDialogOpen, setGalleryDialogOpen] = useState(false);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
+  const handleDialogOpen = () => setDialogOpen(true);
+  const handleDialogClose = () => setDialogOpen(false);
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
+  const handleGalleryDialogOpen = (e) => {
+    e.preventDefault();
+    setGalleryDialogOpen(true);
   };
+  const handleGalleryDialogClose = () => setGalleryDialogOpen(false);
+
+  const handleInfoDialogOpen = (e) => {
+    e.preventDefault();
+    setInfoDialogOpen(true);
+  };
+  const handleInfoDialogClose = () => setInfoDialogOpen(false);
+
+  const handleContactDialogOpen = (e) => {
+    e.preventDefault();
+    setContactDialogOpen(true);
+  };
+  const handleContactDialogClose = () => setContactDialogOpen(false);
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="logo">
         <img src={logoImg} alt="HotelApp Logo" className="logo-img" />
       </div>
-      <div className="search-container">
-        <input type="text" placeholder="Search..." className="search-input" />
-      </div>
       <nav className="nav">
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/rooms">Rooms</a></li>
-          <li><a href="/amenities">Amenities</a></li>
-          <li><a href="/gallery">Gallery</a></li>
-          <li><a href="/info">Info</a></li>
-          <li><a href="/contact">Contact Us</a></li>
+          <li className={isActive('/homepage') ? 'active' : ''}>
+            <a href="/homepage">Home</a>
+          </li>
+          <li>
+            <a href="/" onClick={handleInfoDialogOpen}>Info</a>
+          </li>
+          <li>
+            <a href="/" onClick={handleGalleryDialogOpen}>Gallery</a>
+          </li>
+          <li>
+            <a href="/" onClick={handleContactDialogOpen}>Contact Us</a>
+          </li>
         </ul>
       </nav>
-      {/* Profile Icon triggers dialog */}
-      <div className="profile-icon" onClick={handleDialogOpen} style={{ cursor: 'pointer' }}>
+      <div className="profile-icon" onClick={handleDialogOpen} aria-label="Profile" style={{ cursor: 'pointer' }}>
         <FaUserCircle size={30} color="#fff" />
       </div>
 
-      {/* Profile Dialog */}
+      {/* Dialog Components */}
       <ProfileDialog open={dialogOpen} handleClose={handleDialogClose} />
+      <GalleryDialog open={galleryDialogOpen} handleClose={handleGalleryDialogClose} />
+      <InfoDialog open={infoDialogOpen} handleClose={handleInfoDialogClose} />
+      <ContactDialog open={contactDialogOpen} handleClose={handleContactDialogClose} />
     </header>
   );
 };

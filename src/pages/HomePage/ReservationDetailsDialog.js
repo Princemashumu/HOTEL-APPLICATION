@@ -86,18 +86,40 @@ const ReservationDetailsDialog = ({ open, onClose, room, checkInDate, checkOutDa
               alignItems: 'center',    // Centers content horizontally
               justifyContent: 'center', // Centers content vertically
               gap: 2,
+              border: '1px solid blue',
               p: 2,
               bgcolor: theme.palette.background.paper,
               minHeight: '50vh'  // Set a minimum height to visually center the content
             }}
           >
             <Typography variant="h6">Room: {room.name}</Typography>
-            <Typography>Check-In Date: {checkInDate}</Typography>
-            <Typography>Check-Out Date: {checkOutDate}</Typography>
-            <Typography>Guests: {guests}</Typography>
+            <Box   sx={{ 
+    border: '1px solid', 
+    borderColor: theme.palette.grey[400], 
+    borderRadius: '8px', 
+    padding: '8px', 
+    width: '100%',
+    textAlign: 'center',
+    justifyContent:'center'
+  }}
+>
+<Typography>Check-In Date: {checkInDate}</Typography>
+<Typography>Check-Out Date: {checkOutDate}</Typography>
+<Typography>Number of Guests: {guests}</Typography>
+</Box>
+            
+<Box   sx={{ 
+    border: '1px solid', 
+    borderColor: theme.palette.grey[400], 
+    borderRadius: '8px', 
+    padding: '8px', 
+    width: '100%',
+    textAlign: 'center'
+  }}
+>
             <Typography>Price per Night: R{roomPrice.toFixed(2)}</Typography>
             <Typography>Total: R{totalCost.toFixed(2)}</Typography>
-
+</Box>
             {/* PayPal Payment Integration */}
             <PayPalScriptProvider options={{ "client-id": paypalClientId }}>
               <PayPalPayment
