@@ -18,18 +18,22 @@ This project is a hotel booking web application built with React, Firebase, and 
 ### Prerequisites
 Before running the application, make sure you have the following installed on your machine:
 
-```Node.js and npm
+### Node.js and npm
+````
 Firebase project with Firestore and Authentication enabled
 Installation
 Clone this repository:
-
-bash
+````
+### bash
+````
 Copy code
-git clone https://github.com/your-username/hotel-booking-app.git
+git clone https://github.com/princemashumu/HOTEL-APPLICATION.git
 cd hotel-booking-app
 Install dependencies:
+````
 
-bash
+### bash
+```
 Copy code
 npm install
 Create a Firebase project:
@@ -40,9 +44,10 @@ Create a Firebase project:
 - Enable Firestore and Authentication.
 - Set up Firebase in your app:
 
-```Create a file named firebaseConfig.js in the src/firebase directory:
+### Create a file named firebaseConfig.js in the src/firebase directory:
 
-Copy code
+### Copy code
+```
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -62,12 +67,14 @@ const auth = app.auth();
 
 export { db, auth };
 Replace the placeholders (YOUR_API_KEY, etc.) with your Firebase project configuration.
-Run the application:
-
-bash
+```
+### Run the application:
+### bash
+```
 Copy code
 npm start
 ```
+
 ## Usage
 
 - 1. Authentication
@@ -81,8 +88,9 @@ npm start
 - Logged-in users can save rooms to their favorites by clicking the "Save Room" button.
 - Rooms saved to favorites are stored under the user's document in Firestore.
 
-## Project Structure
-``` bash
+### Project Structure
+### bash
+```
 Copy code
 src/
 │
