@@ -3,22 +3,43 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { db, auth } from '../firebase'; // Import Firestore and Auth services
+import { collection, addDoc } from 'firebase/firestore'; // Firestore functions
 
 const ConfirmBookingDialog = ({ open, onClose, room }) => {
   const [accountNumber, setAccountNumber] = useState('');
   const [accountName, setAccountName] = useState('');
   const [bankName, setBankName] = useState('');
   const [branchCode, setBranchCode] = useState('');
+  const user = auth.currentUser; // Get current user from Firebase Auth
 
-  const handleConfirm = () => {
-    // Handle confirmation logic here
-    console.log('Booking confirmed with:', {
-      accountNumber,
-      accountName,
-      bankName,
-      branchCode,
-    });
-    onClose();
+  const handleConfirm = async () => {
+    if (user) { // Check if user is logged in
+      try {
+        // Add booking to Firestore
+        await addDoc(collection(db, 'bookings'), {
+          userId: user.uid, // User ID from Auth
+          firstName: user.displayName?.split(' ')[0] || 'First Name', // Assuming user.displayName contains full name
+          lastName: user.displayName?.split(' ')[1] || 'Last Name',
+          accountNumber,
+          accountName,
+          bankName,
+          branchCode,
+          room: {
+            name: room.name,
+            price: room.price,
+            // Add other room details if necessary
+          },
+          createdAt: new Date(), // Timestamp for when the booking was made
+        });
+        console.log('Booking confirmed!');
+        onClose();
+      } catch (error) {
+        console.error('Error adding booking:', error);
+      }
+    } else {
+      console.log('No user is logged in');
+    }
   };
 
   return (
