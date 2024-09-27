@@ -5,7 +5,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from 'C:/Users/User/Documents/Code Tribe/ACADEMY/hotelapp/src/firebase/firebaseConfig.js';
+import { auth } from '../../firebase/firebaseConfig';
 import backgroundImage from './bannerImageS.jpg';
 import RegisterHeader from '../RegisterPage/RegisterHeader';
 
