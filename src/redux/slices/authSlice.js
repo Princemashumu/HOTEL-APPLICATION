@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth, db } from 'C:/Users/User/Documents/Code Tribe/ACADEMY/hotelapp/src/firebase/firebaseConfig.js';
+import { auth, db } from '../../firebase/firebaseConfig.js';
 import { doc, setDoc } from 'firebase/firestore'; // Firestore functions
 
 const authSlice = createSlice({
