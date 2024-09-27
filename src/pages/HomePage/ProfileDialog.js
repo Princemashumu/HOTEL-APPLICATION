@@ -14,9 +14,10 @@ import {
   Alert,
   TextField,
   IconButton,
+  CircularProgress, // For loading
 } from '@mui/material';
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore'; // Import Firestore methods
 import CloseIcon from '@mui/icons-material/Close'; // Import Close icon
 import EditIcon from '@mui/icons-material/Edit'; // Import Edit icon
 import { ProfileDetailsMenu, BookingsMenu, FavouritesMenu, SavedRoomsMenu, SettingsMenu } from './ProfileMenuItems';
@@ -30,6 +31,8 @@ const ProfileDialog = ({ open, onClose }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [bookings, setBookings] = useState([]); // Store user bookings
+  const [loadingBookings, setLoadingBookings] = useState(false); // Loading state for bookings
 
   const auth = getAuth();
   const db = getFirestore(); // Initialize Firestore
@@ -56,8 +59,22 @@ const ProfileDialog = ({ open, onClose }) => {
             } else {
               console.log('No such user document!');
             }
+
+            // Fetch bookings from Firestore
+            setLoadingBookings(true);
+            const bookingsQuery = query(collection(db, 'bookings'), where('userID', '==', currentUser.uid));
+            const bookingsSnapshot = await getDocs(bookingsQuery);
+
+            const userBookings = bookingsSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+
+            setBookings(userBookings);
           } catch (error) {
-            console.error('Error fetching user details:', error);
+            console.error('Error fetching user details or bookings:', error);
+          } finally {
+            setLoadingBookings(false);
           }
         }
       });
@@ -113,6 +130,39 @@ const ProfileDialog = ({ open, onClose }) => {
       console.error("Error signing out:", error);
     });
   };
+
+  const renderBookings = () => {
+    if (loadingBookings) {
+      return <CircularProgress />;
+    }
+  
+    if (bookings.length === 0) {
+      return <Typography>No bookings found.</Typography>;
+    }
+  
+    return (
+      <List>
+        {bookings.map((booking) => {
+          return (
+            <Box key={booking.id} mb={2} p={2} border={1} borderRadius={4} borderColor="grey.300">
+              {/* Display Room Details */}
+              <Typography variant="h6">Room: {booking.roomDetails || 'N/A'}</Typography>
+              
+              {/* Display Email */}
+              <Typography>Email: {booking.email || 'N/A'}</Typography>
+  
+              {/* Display Price in ZAR */}
+              <Typography>Price: ZAR {booking.price ? (booking.price * 1).toFixed(2) : 'N/A'}</Typography>
+  
+              {/* Set status to "pending" */}
+              <Typography>Status: {"pending"}</Typography>
+            </Box>
+          );
+        })}
+      </List>
+    );
+  };
+  
 
   const renderContent = () => {
     switch (selectedMenu) {
@@ -195,7 +245,7 @@ const ProfileDialog = ({ open, onClose }) => {
         return (
           <Box>
             <Typography variant="h6">Bookings</Typography>
-            {/* Add Bookings content here */}
+            {renderBookings()}
           </Box>
         );
       case 'favourites':
@@ -243,37 +293,28 @@ const ProfileDialog = ({ open, onClose }) => {
           User Profile
           <IconButton
             onClick={handleClose}
-            sx={{ position: 'absolute', right: 8, top: 8, minWidth: 0, padding: 1, color: theme.palette.text.primary }}
+            sx={{
+              position: 'absolute',
+              right: theme.spacing(1),
+              top: theme.spacing(1),
+              color: theme.palette.grey[500],
+            }}
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box display="flex">
-            <List component="nav" sx={{ minWidth: 200 }}>
-              <ProfileDetailsMenu
-                selected={selectedMenu === 'profileDetails'}
-                onClick={() => handleMenuClick('profileDetails')}
-              />
-              <BookingsMenu
-                selected={selectedMenu === 'bookings'}
-                onClick={() => handleMenuClick('bookings')}
-              />
-              <FavouritesMenu
-                selected={selectedMenu === 'favourites'}
-                onClick={() => handleMenuClick('favourites')}
-              />
-              <SavedRoomsMenu
-                selected={selectedMenu === 'savedRooms'}
-                onClick={() => handleMenuClick('savedRooms')}
-              />
-              <SettingsMenu
-                selected={selectedMenu === 'settings'}
-                onClick={() => handleMenuClick('settings')}
-              />
-            </List>
-            <Divider orientation="vertical" flexItem />
-            <Box flex={1} padding={2}>
+            {/* Left Sidebar with Menu */}
+            <Box width="20%" mr={2}>
+              <ProfileDetailsMenu onClick={() => handleMenuClick('profileDetails')} />
+              <BookingsMenu onClick={() => handleMenuClick('bookings')} />
+              <FavouritesMenu onClick={() => handleMenuClick('favourites')} />
+              <SavedRoomsMenu onClick={() => handleMenuClick('savedRooms')} />
+              <SettingsMenu onClick={() => handleMenuClick('settings')} />
+            </Box>
+            {/* Main Content */}
+            <Box width="80%">
               {renderContent()}
             </Box>
           </Box>
@@ -281,12 +322,11 @@ const ProfileDialog = ({ open, onClose }) => {
       </Dialog>
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        message="Profile updated"
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-          Profile updated
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          Profile updated successfully!
         </Alert>
       </Snackbar>
     </>
