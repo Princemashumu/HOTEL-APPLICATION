@@ -1,5 +1,5 @@
 ## Hotel Booking Application
-This project is a hotel booking web application built with React, Firebase, and Material-UI. The application allows users to view room details, make reservations, and store their favorite rooms. User authentication and data storage are managed through Firebase, ensuring that each user's reservations and favorite rooms are stored securely.
+This project is a hotel booking web application built with React,Redux, Firebase, and Material-UI. The application allows users to view room details, make reservations, and store their favorite rooms. User authentication and data storage are managed through Firebase, ensuring that each user's reservations and favorite rooms are stored securely.
 
 ### Features
 
