@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getDocs, collection, updateDoc, doc } from "firebase/firestore";
+import { getDocs, collection, updateDoc, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig"; // Ensure the correct path to your Firebase config
 import {
   Container,
@@ -18,8 +18,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import RoomDetailsDialog from "./RoomDetailsDialog"; // Make sure this path is correct
+import RoomDetailsDialog from "./RoomDetailsDialog"; // Ensure this path is correct
 
 function RoomsPage() {
   const [rooms, setRooms] = useState([]);
@@ -76,13 +75,25 @@ function RoomsPage() {
     }
   };
 
-  const toggleFavorite = (id) => {
+  const toggleFavorite = async (room) => {
+    const roomId = room.id;
     setFavorites((prev) => {
       const newFavorites = new Set(prev);
-      if (newFavorites.has(id)) {
-        newFavorites.delete(id);
+      if (newFavorites.has(roomId)) {
+        newFavorites.delete(roomId);
+        // Remove from Firestore
+        deleteDoc(doc(db, "Favourites", roomId));
       } else {
-        newFavorites.add(id);
+        newFavorites.add(roomId);
+        // Add to Firestore
+        setDoc(doc(db, "Favourites", roomId), {
+          name: room.name,
+          image: room.image,
+          price: room.price,
+          availability: room.availability,
+          amenities: room.amenities,
+          rating: room.rating,
+        });
       }
       return newFavorites;
     });
@@ -279,7 +290,7 @@ function RoomsPage() {
                     aria-label="Add to favorites"
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleFavorite(room.id);
+                      toggleFavorite(room);
                     }}
                     sx={{
                       position: "absolute",
@@ -344,8 +355,8 @@ function RoomsPage() {
       {selectedRoom && (
         <RoomDetailsDialog
           open={openDialog}
-          onClose={handleCloseDialog}
           room={selectedRoom}
+          onClose={handleCloseDialog}
         />
       )}
     </Container>

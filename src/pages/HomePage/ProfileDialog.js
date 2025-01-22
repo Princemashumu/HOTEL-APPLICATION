@@ -14,6 +14,10 @@ import {
   Alert,
   TextField,
   IconButton,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
   CircularProgress, // For loading
 } from '@mui/material';
 import { getAuth, onAuthStateChanged, updateProfile } from 'firebase/auth';
@@ -39,6 +43,7 @@ const ProfileDialog = ({ open, onClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate(); // Initialize navigate function
+  const [favorites, setFavorites] = useState([]); // Store the favorite rooms
 
   useEffect(() => {
     if (open) {
@@ -71,8 +76,20 @@ const ProfileDialog = ({ open, onClose }) => {
             }));
 
             setBookings(userBookings);
+
+            // Fetch favorite rooms from Firestore
+            const favoritesQuery = query(collection(db, 'Favourites'), where('userID', '==', currentUser.uid));
+            const favoritesSnapshot = await getDocs(favoritesQuery);
+
+            const userFavorites = favoritesSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+
+            setFavorites(userFavorites);
+
           } catch (error) {
-            console.error('Error fetching user details or bookings:', error);
+            console.error('Error fetching user details, bookings, or favorites:', error);
           } finally {
             setLoadingBookings(false);
           }
@@ -144,7 +161,7 @@ const ProfileDialog = ({ open, onClose }) => {
       <List>
         {bookings.map((booking) => {
           return (
-            <Box key={booking.id} mb={2} p={2} border={1} borderRadius={4} borderColor="grey.300">
+            <Box key={booking.id} mb={2} p={2} border={1} borderRadius={4} borderColor="grey.300" fullScreen>
               {/* Display Room Details */}
               <Typography variant="h6">Room: {booking.roomDetails || 'N/A'}</Typography>
               
@@ -252,7 +269,28 @@ const ProfileDialog = ({ open, onClose }) => {
         return (
           <Box>
             <Typography variant="h6">Favourites</Typography>
-            {/* Add Favourites content here */}
+            {favorites.length > 0 ? (
+              <Grid container spacing={2}>
+                {favorites.map((favorite) => (
+                  <Grid item key={favorite.id} xs={12} sm={6} md={4}>
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={favorite.image || '/default-image.jpg'}
+                        alt={favorite.name}
+                      />
+                      <CardContent>
+                        <Typography variant="h6">{favorite.name}</Typography>
+                        {/* Add any other information you want to display */}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <Typography variant="body1">No favourites found.</Typography>
+            )}
           </Box>
         );
       case 'savedRooms':
@@ -279,15 +317,14 @@ const ProfileDialog = ({ open, onClose }) => {
         return null;
     }
   };
-
+  
   return (
     <>
       <Dialog
         open={open}
         onClose={handleClose}
         fullScreen={fullScreen}
-        fullWidth
-        maxWidth="lg"
+        fullWidth maxWidth="lg"
       >
         <DialogTitle>
           User Profile
